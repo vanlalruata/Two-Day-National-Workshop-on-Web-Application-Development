@@ -2,6 +2,7 @@
 
 ## The Project Structure is:
 
+```language
 school-management/
 ├── assets/
 │   ├── css/
