@@ -97,4 +97,4 @@ $filter_date = $_GET['date'] ?? '';
   </tbody>
 </table>
 
-<?php include_once __DIR__ ._
+<?php include_once __DIR__ . '/../inc/footer.php'; ?>
