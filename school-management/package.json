@@ -1,0 +1,16 @@
+{
+  "name": "school-mgmt-tailwind",
+  "version": "1.0.0",
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/src/input.css -o ./assets/css/styles.css --minify",
+    "watch:css": "tailwindcss -i ./assets/src/input.css -o ./assets/css/styles.css --watch"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.13"
+  }
+}

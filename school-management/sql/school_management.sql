@@ -1,0 +1,96 @@
+-- school_management.sql
+CREATE DATABASE IF NOT EXISTS school_management;
+USE school_management;
+
+-- USERS TABLE
+CREATE TABLE users (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  role ENUM('admin','teacher','student','parent') NOT NULL DEFAULT 'student',
+  email VARCHAR(150),
+  phone VARCHAR(20),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CLASSES
+CREATE TABLE classes (
+  class_id INT AUTO_INCREMENT PRIMARY KEY,
+  class_name VARCHAR(50) NOT NULL,
+  section VARCHAR(10)
+);
+
+-- SUBJECTS
+CREATE TABLE subjects (
+  subject_id INT AUTO_INCREMENT PRIMARY KEY,
+  subject_name VARCHAR(100) NOT NULL,
+  class_id INT,
+  FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE SET NULL
+);
+
+-- STUDENTS
+CREATE TABLE students (
+  student_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNIQUE,
+  admission_no VARCHAR(50) UNIQUE,
+  dob DATE,
+  gender ENUM('Male','Female','Other') DEFAULT 'Other',
+  address TEXT,
+  parent_id INT,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- TEACHERS
+CREATE TABLE teachers (
+  teacher_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT UNIQUE,
+  subject_specialization VARCHAR(150),
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- ENROLLMENTS
+CREATE TABLE enrollments (
+  enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT,
+  class_id INT,
+  year YEAR,
+  FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+  FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE CASCADE
+);
+
+-- ATTENDANCE
+CREATE TABLE attendance (
+  attendance_id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT,
+  class_id INT,
+  date DATE,
+  status ENUM('Present','Absent') DEFAULT 'Present',
+  FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+  FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE CASCADE
+);
+
+-- EXAMS
+CREATE TABLE exams (
+  exam_id INT AUTO_INCREMENT PRIMARY KEY,
+  class_id INT,
+  subject_id INT,
+  exam_date DATE,
+  FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE CASCADE,
+  FOREIGN KEY (subject_id) REFERENCES subjects(subject_id) ON DELETE SET NULL
+);
+
+-- RESULTS
+CREATE TABLE results (
+  result_id INT AUTO_INCREMENT PRIMARY KEY,
+  exam_id INT,
+  student_id INT,
+  marks_obtained DECIMAL(6,2),
+  grade VARCHAR(5),
+  FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE,
+  FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE
+);
+
+-- Seed admin user: hash with PHP password_hash('Admin@123', PASSWORD_DEFAULT)
+-- Example hash (generate on your server and replace)
+INSERT INTO users (username, password, role, email) VALUES
+('admin', '$2y$10$KF6.y2p.nw7IQ8zlSBjL2Osfdjm4j.MZGaTR0A41L1hSK.CsMmPu2', 'admin', 'admin@example.com');
